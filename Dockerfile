@@ -1,13 +1,7 @@
-FROM golang:1.18-bullseye
-
-RUN go install github.com/beego/bee/v2@latest
-
-ENV GO111MODULE=on
-ENV GOFLAGS=-mod=vendor
-
-ENV APP_HOME /go/src/portfolio
-RUN mkdir -p "$APP_HOME"
-
-WORKDIR "$APP_HOME"
-EXPOSE 8010
-CMD ["bee", "run"]
+FROM golang
+# create a working directory
+WORKDIR /app
+# add source code
+ADD src .
+# run main.go
+CMD ["go", "run", "main.go"]
