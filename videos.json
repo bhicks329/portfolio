@@ -1,0 +1,12 @@
+[
+    {
+      "title": "Video 1",
+      "description": "Description for Video 1",
+      "videoPath": "video1.mov"
+    },
+    {
+      "title": "Video 2",
+      "description": "Description for Video 2",
+      "videoPath": "video2.mov"
+    }
+  ]

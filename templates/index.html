@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Portfolio</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>My Portfolio</h1>
+    </header>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>Welcome to my portfolio! I am Will Hicks and hoping to be able to study at Falmouth. Here, you'll find a selection of my work.</p>
+    </section>
+
+    <section id="videos">
+        <h2>My Work</h2>
+        <video id="mainVideo" controls>
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div id="instructionText">
+            <p>Click a video below to play</p>
+        </div>
+
+        <div id="videoList">
+            {{range .Videos}}
+                <div class="video-item" onclick="playVideo('{{.Path}}', '{{.Title}}', this.querySelector('.play-count'))">
+                    <p class="video-title">{{.Title}} (Play Count: <span class="play-count">{{.PlayCount}}</span>)</p>
+                </div>
+            {{end}}
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <p>Email: will.hicks1@outlook.com</p>
+        <p>Phone: 0744444444</p>
+    </section>
+
+    <script>
+        function playVideo(path, title, playCountElement) {
+            var videoPlayer = document.getElementById('mainVideo');
+            var fullPath = window.location.origin + '/videos/' + path;
+            console.log("Attempting to play video:", fullPath);
+
+            // Hide the instruction text
+            instructionText.style.display = 'none';
+
+            videoPlayer.style.display = 'block';
+
+            videoPlayer.src = fullPath;
+            videoPlayer.load();
+
+            videoPlayer.play().then(() => {
+                console.log("Playback started successfully.");
+                // Increment the play count
+                fetch("/play?title=" + encodeURIComponent(title))
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Update the play count element with the new value
+                        playCountElement.textContent = `${title} (Play Count: ${data.playCount})`;
+                    })
+                    .catch(error => {
+                        console.error("Error incrementing play count:", error);
+                    });
+            }).catch(error => {
+                console.error("Error in playback:", error);
+            });
+        }
+    </script>
+</body>
+</html>
